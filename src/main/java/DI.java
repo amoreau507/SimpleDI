@@ -71,10 +71,11 @@ public class DI {
 
         for (Field field : allFields) {
             if(field.isAnnotationPresent(Inject.class)) {
+                Class<?> clazz = field.getAnnotation(Inject.class).type();
                 try {
-                    boolean originallyAccessible = field.isAccessible();
+                    boolean originallyAccessible = field.canAccess(object);
                     field.setAccessible(true);
-                    field.set(object, get(field.getType()));
+                    field.set(object, get(clazz));
                     if (!originallyAccessible) {
                         field.setAccessible(false);
                     }
